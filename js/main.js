@@ -1,68 +1,122 @@
-const firePixelsArray = [];
-const fireWidth = 40;
-const fireHeight = 40;
 
-const fireColorsPalette = [{"r":7,"g":7,"b":7},{"r":31,"g":7,"b":7},{"r":47,"g":15,"b":7},{"r":71,"g":15,"b":7},{"r":87,"g":23,"b":7},{"r":103,"g":31,"b":7},{"r":119,"g":31,"b":7},{"r":143,"g":39,"b":7},{"r":159,"g":47,"b":7},{"r":175,"g":63,"b":7},{"r":191,"g":71,"b":7},{"r":199,"g":71,"b":7},{"r":223,"g":79,"b":7},{"r":223,"g":87,"b":7},{"r":223,"g":87,"b":7},{"r":215,"g":95,"b":7},{"r":215,"g":95,"b":7},{"r":215,"g":103,"b":15},{"r":207,"g":111,"b":15},{"r":207,"g":119,"b":15},{"r":207,"g":127,"b":15},{"r":207,"g":135,"b":23},{"r":199,"g":135,"b":23},{"r":199,"g":143,"b":23},{"r":199,"g":151,"b":31},{"r":191,"g":159,"b":31},{"r":191,"g":159,"b":31},{"r":191,"g":167,"b":39},{"r":191,"g":167,"b":39},{"r":191,"g":175,"b":47},{"r":183,"g":175,"b":47},{"r":183,"g":183,"b":47},{"r":183,"g":183,"b":55},{"r":207,"g":207,"b":111},{"r":223,"g":223,"b":159},{"r":239,"g":239,"b":199},{"r":255,"g":255,"b":255}]
+// 'use strict';
+const pixelsArray = [];
+const fireWidth = 10;
+const fireHeight = 10;
 
+var snake = null;
 const { log } = console;
 function start() {
-    createFireDataStrecture();
-    createFireSource();
-    renderFire();
-    setInterval(calculateFirePropagation, 50);
-    //calculateFirePropagation()
+    setEvents()
+    createDataStrecture();
+    snake = new Snake(5, 3);
+    renderGame();
 }
 
-function createFireDataStrecture() {
+function setEvents() {
+    window.addEventListener('keydown',getKeyPressed)
+}
+
+function createDataStrecture() {
     const numberOfPixels = fireWidth * fireHeight;
-
     for (let i = 0; i < numberOfPixels; i++) {
-        firePixelsArray[i] = 0
+        pixelsArray[i] = {
+            value: 0,
+            islimit: false
+        }
     }
+    createTopLimit();
+    createLeftLimit();
+    createRightLimit();
+    createBottomLimit();
 }
 
-function calculateFirePropagation() {
-    for (let column = 0; column < fireWidth; column++)  {
-        for (let row = 0; row < fireHeight; row++)  {
-            const pixelIndex = column + (fireWidth * row);
-            updateFireIntensityPerPixel(pixelIndex)
-        }     
+function Snake() {
+    this.currentPixelIndex = 37
+    this.sizeInPixels = 3;
+    this.path = [32,33,34,35,36]
+
+    this.setDataPosition()
+}
+
+Snake.prototype.setDataPosition = function() {
+    const fistPixel = this.path.shift()
+    this.path.push(this.currentPixelIndex)
+    for (let pixel of this.path) {
+        pixelsArray[pixel].value = 1;
     }
+    pixelsArray[fistPixel].value = 0;
+};
+
+Snake.prototype.move = function(newPositionIndex) {
     
-    renderFire();
+    if (pixelsArray[newPositionIndex].islimit) {
+        return
+    }
+    this.currentPixelIndex = newPositionIndex;
+    this.setDataPosition();
+    renderGame();
 }
 
-function updateFireIntensityPerPixel(currentPixelIndex) {
-    const belowPixelIndex = currentPixelIndex + fireWidth;
-    if (belowPixelIndex >= fireHeight * fireWidth) {
-        return; 
+Snake.prototype.toLeft = function() {
+    const newPositionIndex = snake.currentPixelIndex - 1;
+    this.move(newPositionIndex);
+}
+
+Snake.prototype.toRight = function() {
+    const newPositionIndex = snake.currentPixelIndex + 1;
+    this.move(newPositionIndex);
+}
+
+Snake.prototype.toDown = function() {
+    const newPositionIndex = snake.currentPixelIndex + fireWidth;
+    this.move(newPositionIndex);
+}
+
+Snake.prototype.toUp = function() {
+    const newPositionIndex = snake.currentPixelIndex - fireWidth; 
+    this.move(newPositionIndex);
+}
+
+function getKeyPressed(keyPressed) { 
+    if (keyPressed.defaultPrevented) {
+        return; // Do nothing if the event was already processed
     }
 
-    const decay = Math.floor(Math.random() * 3);
-    const belowPixelFireIntensity = firePixelsArray[belowPixelIndex];
-    const newFireIntensity = 
-        belowPixelFireIntensity - decay >= 0 ? belowPixelFireIntensity - decay : 0;
-
-    firePixelsArray[currentPixelIndex - decay] = newFireIntensity;
+    switch (keyPressed.key) {
+        case "ArrowDown":
+            snake.toDown();
+            break;
+        case "ArrowUp":
+            snake.toUp();
+            break;
+        case "ArrowLeft":
+            snake.toLeft();
+            break;
+        case "ArrowRight":
+            snake.toRight();
+            break;
+        default:
+            return; 
+    }
+    event.preventDefault();
 }
 
-function renderFire() {
-    const debug = false;
+function renderGame() {
+    const debug = true;
     let html = "<table>";
     for (let row = 0; row < fireHeight; row++) {
         html += "<tr>";
         for (let column = 0; column < fireWidth; column++) {
             const pixelIndex = column + (fireWidth * row);
-            const fireIntensity = firePixelsArray[pixelIndex]
-            if (debug) {
+            const fireIntensity = pixelsArray[pixelIndex].value
+            if (!fireIntensity) {
                 html += "<td>";
                 html += `<div class="pixel-index">${pixelIndex}</div>`;
                 html += fireIntensity;
                 html += "</td>";
             } else {
-                const color = fireColorsPalette[fireIntensity]
-                const colorString = `${color.r},${color.g},${color.b}`;
-                html += `<td class="pixel" style="background:rgb(${colorString}") ></td>`;
+                html += `<td class="pixel" style="background:#F00" ></td>`;
             }
         }
         html += "</tr>";
@@ -72,13 +126,44 @@ function renderFire() {
     document.querySelector('.fireCanvas').innerHTML = html;
 }
 
-function createFireSource() {
+function createBottomLimit() {
     for (let column = 0; column <= fireWidth; column++) {
         const overflowPixelIndex = fireWidth * fireHeight;
         const lastPixelOfFirstColumn = (overflowPixelIndex - fireWidth);
         const pixelIndex = lastPixelOfFirstColumn + column;
-        firePixelsArray[pixelIndex] = 36;
+        if (pixelsArray[pixelIndex]) {
+            pixelsArray[pixelIndex].islimit = true;
+        }
     }
 }
+
+function createTopLimit() {
+    for (let column = 0; column <= fireWidth; column++) {
+        const pixelIndex =  column;
+        if (pixelsArray[pixelIndex]) {
+            pixelsArray[pixelIndex].islimit = true;
+        }
+    }
+}
+
+function createLeftLimit() {
+    for (let row = 0; row <= fireWidth; row++) {
+        const pixelIndex =  row * fireWidth;
+        if (pixelsArray[pixelIndex]) {
+            pixelsArray[pixelIndex].islimit = true;
+        }
+    }
+}
+
+function createRightLimit() {
+    for (let row = 0; row <= fireWidth; row++) {
+        const firstPixol =  row * fireWidth;        
+        const pixelIndex =  firstPixol + (fireWidth - 1);
+        if (pixelsArray[pixelIndex]) {
+            pixelsArray[pixelIndex].islimit = true;
+        }
+    }
+}
+
 
 start();
