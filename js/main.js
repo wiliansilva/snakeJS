@@ -34,8 +34,8 @@ function createDataStrecture() {
 function Snake() {
     this.currentPixelIndex = 37
     this.sizeInPixels = 3;
-    this.path = [32,33,34,35,36]
-
+    this.path = [32,33,34,35,36];
+    this.direction = 'right';
     this.setDataPosition()
 }
 
@@ -48,32 +48,36 @@ Snake.prototype.setDataPosition = function() {
     pixelsArray[fistPixel].value = 0;
 };
 
-Snake.prototype.move = function(newPositionIndex) {
-    
-    if (pixelsArray[newPositionIndex].islimit) {
-        return
-    }
+Snake.prototype.move = function(newPositionIndex)  {  
+    if (pixelsArray[newPositionIndex] && pixelsArray[newPositionIndex].islimit) {
+        return;
+    }  
     this.currentPixelIndex = newPositionIndex;
     this.setDataPosition();
     renderGame();
+    timer = setTimeout(this.move, 1000)
 }
 
-Snake.prototype.toLeft = function() {
+Snake.prototype.toLeft = function() { 
+    this.direction = 'left';
     const newPositionIndex = snake.currentPixelIndex - 1;
     this.move(newPositionIndex);
 }
 
 Snake.prototype.toRight = function() {
+    this.direction = 'right';
     const newPositionIndex = snake.currentPixelIndex + 1;
     this.move(newPositionIndex);
 }
 
 Snake.prototype.toDown = function() {
+    this.direction = 'down';
     const newPositionIndex = snake.currentPixelIndex + fireWidth;
-    this.move(newPositionIndex);
+    snake.move(newPositionIndex);
 }
 
 Snake.prototype.toUp = function() {
+    this.direction = 'up';
     const newPositionIndex = snake.currentPixelIndex - fireWidth; 
     this.move(newPositionIndex);
 }
@@ -85,15 +89,27 @@ function getKeyPressed(keyPressed) {
 
     switch (keyPressed.key) {
         case "ArrowDown":
+            if(snake.direction === 'up') {
+                return;
+            }
             snake.toDown();
             break;
         case "ArrowUp":
+            if(snake.direction === 'down') {
+                return;
+            }
             snake.toUp();
             break;
         case "ArrowLeft":
+            if(snake.direction === 'right') {
+                return;
+            }
             snake.toLeft();
             break;
         case "ArrowRight":
+            if(snake.direction === 'left') {
+                return;
+            }
             snake.toRight();
             break;
         default:
@@ -101,6 +117,7 @@ function getKeyPressed(keyPressed) {
     }
     event.preventDefault();
 }
+
 
 function renderGame() {
     const debug = true;
@@ -126,15 +143,19 @@ function renderGame() {
     document.querySelector('.fireCanvas').innerHTML = html;
 }
 
-function createBottomLimit() {
-    for (let column = 0; column <= fireWidth; column++) {
-        const overflowPixelIndex = fireWidth * fireHeight;
-        const lastPixelOfFirstColumn = (overflowPixelIndex - fireWidth);
-        const pixelIndex = lastPixelOfFirstColumn + column;
-        if (pixelsArray[pixelIndex]) {
-            pixelsArray[pixelIndex].islimit = true;
+
+const createAreaLimits = {
+    createBottomLimit: () => {
+        for (let column = 0; column <= fireWidth; column++) {
+            const overflowPixelIndex = fireWidth * fireHeight;
+            const lastPixelOfFirstColumn = (overflowPixelIndex - fireWidth);
+            const pixelIndex = lastPixelOfFirstColumn + column;
+            if (pixelsArray[pixelIndex]) {
+                pixelsArray[pixelIndex].islimit = true;
+            }
         }
-    }
+    },
+    
 }
 
 function createTopLimit() {
