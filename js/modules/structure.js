@@ -1,18 +1,18 @@
-var Strecture = function(numberRows, numberColumns) {
-    this.pixelsArray = [];
+const Structure = function(numberRows, numberColumns) {
+    this.structureArray = [];
     this.numberRows = numberRows;
     this.numberColumns = numberColumns;
 
-    this.createDataPixel();
-    this.createLimits();
+    this.createDataStructure();
+    this.setLimits();
 }
 
-Strecture.prototype = (function() {
-	// 'use strict';
-    const createDataPixel = function() {
-        const numberOfPixels = this.numberRows * this.numberColumns;
-        for (let i = 0; i < numberOfPixels; i++) {
-            this.pixelsArray[i] = {
+Structure.prototype = (function() {
+	'use strict';
+    const createDataStructure = function() {
+        const numberOfCells = this.numberRows * this.numberColumns;
+        for (let i = 0; i < numberOfCells; i++) {
+            this.structureArray[i] = {
                 value: 0,
                 islimit: false
             }
@@ -24,32 +24,32 @@ Strecture.prototype = (function() {
             const overflowPixelIndex = thisObj.numberRows * thisObj.numberColumns;
             const lastPixelOfFirstColumn = (overflowPixelIndex - thisObj.numberRows);
             const pixelIndex = lastPixelOfFirstColumn + row;
-            if (thisObj.pixelsArray[pixelIndex]) {
-                thisObj.pixelsArray[pixelIndex].islimit = true;
+            if (thisObj.structureArray[pixelIndex]) {
+                thisObj.structureArray[pixelIndex].islimit = true;
             }
         },
         top: function(thisObj, row) {
             const pixelIndex =  row;
-            if (thisObj.pixelsArray[pixelIndex]) {
-                thisObj.pixelsArray[pixelIndex].islimit = true;
+            if (thisObj.structureArray[pixelIndex]) {
+                thisObj.structureArray[pixelIndex].islimit = true;
             }
         },
         left: function(thisObj, row) {
             const pixelIndex =  row * thisObj.numberRows;
-            if (thisObj.pixelsArray[pixelIndex]) {
-                thisObj.pixelsArray[pixelIndex].islimit = true;
+            if (thisObj.structureArray[pixelIndex]) {
+                thisObj.structureArray[pixelIndex].islimit = true;
             }
         },
         right: function(thisObj, row) {
             const firstPixel =  row * thisObj.numberRows;        
             const pixelIndex =  firstPixel + (thisObj.numberRows - 1);
-            if (thisObj.pixelsArray[pixelIndex]) {
-                thisObj.pixelsArray[pixelIndex].islimit = true;
+            if (thisObj.structureArray[pixelIndex]) {
+                thisObj.structureArray[pixelIndex].islimit = true;
             }
         }
     };
 
-    const createLimits = function() {   
+    const setLimits = function() {   
         for (let row = 0; row <= this.numberRows; row++) { 
             this.limits.top(this, row);
             this.limits.bottom(this, row);
@@ -59,8 +59,8 @@ Strecture.prototype = (function() {
     };
 
 	return {
-        createDataPixel:createDataPixel,
-        createLimits:createLimits,
+        createDataStructure:createDataStructure,
+        setLimits:setLimits,
         limits:limits
 	};
  

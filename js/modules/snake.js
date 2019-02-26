@@ -7,7 +7,18 @@ const Snake = function (currentPixelIndex, sizeInPixels) {
     // this.setDataPosition();
 };
 
-Snake.prototype = function() {
+Snake.prototype = (function() {
     'use strict';
+    const setPosition = function() {
+        const fistPixel = this.path.shift()
+        this.path.push(this.currentPixelIndex)
+        for (let pixel of this.path) {
+            pixelsArray[pixel].value = 1;
+        }
+        pixelsArray[fistPixel].value = 0;
+    };
 
-}
+    return {
+        setPosition:setPosition
+    }
+}());

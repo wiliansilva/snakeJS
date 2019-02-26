@@ -55,7 +55,7 @@ Snake.prototype.move = function(newPositionIndex)  {
     this.currentPixelIndex = newPositionIndex;
     this.setDataPosition();
     renderGame();
-    timer = setTimeout(this.move, 1000)
+    // timer = setTimeout(this.move, 1000)
 }
 
 Snake.prototype.toLeft = function() { 
