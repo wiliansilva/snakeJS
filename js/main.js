@@ -25,10 +25,10 @@ function createDataStrecture() {
             islimit: false
         }
     }
-    createTopLimit();
-    createLeftLimit();
-    createRightLimit();
-    createBottomLimit();
+    createAreaLimits.top();
+    createAreaLimits.bottom();
+    createAreaLimits.right();
+    createAreaLimits.left();
 }
 
 function Snake() {
@@ -145,7 +145,7 @@ function renderGame() {
 
 
 const createAreaLimits = {
-    createBottomLimit: () => {
+    bottom: () => {
         for (let column = 0; column <= fireWidth; column++) {
             const overflowPixelIndex = fireWidth * fireHeight;
             const lastPixelOfFirstColumn = (overflowPixelIndex - fireWidth);
@@ -155,36 +155,30 @@ const createAreaLimits = {
             }
         }
     },
-    
-}
-
-function createTopLimit() {
-    for (let column = 0; column <= fireWidth; column++) {
-        const pixelIndex =  column;
-        if (pixelsArray[pixelIndex]) {
-            pixelsArray[pixelIndex].islimit = true;
+    top: () => {
+        for (let column = 0; column <= fireWidth; column++) {
+            const pixelIndex =  column;
+            if (pixelsArray[pixelIndex]) {
+                pixelsArray[pixelIndex].islimit = true;
+            }
+        }
+    },
+    left: () => {
+        for (let row = 0; row <= fireWidth; row++) {
+            const pixelIndex =  row * fireWidth;
+            if (pixelsArray[pixelIndex]) {
+                pixelsArray[pixelIndex].islimit = true;
+            }
+        }
+    },
+    right: () => {
+        for (let row = 0; row <= fireWidth; row++) {
+            const firstPixol =  row * fireWidth;        
+            const pixelIndex =  firstPixol + (fireWidth - 1);
+            if (pixelsArray[pixelIndex]) {
+                pixelsArray[pixelIndex].islimit = true;
+            }
         }
     }
 }
-
-function createLeftLimit() {
-    for (let row = 0; row <= fireWidth; row++) {
-        const pixelIndex =  row * fireWidth;
-        if (pixelsArray[pixelIndex]) {
-            pixelsArray[pixelIndex].islimit = true;
-        }
-    }
-}
-
-function createRightLimit() {
-    for (let row = 0; row <= fireWidth; row++) {
-        const firstPixol =  row * fireWidth;        
-        const pixelIndex =  firstPixol + (fireWidth - 1);
-        if (pixelsArray[pixelIndex]) {
-            pixelsArray[pixelIndex].islimit = true;
-        }
-    }
-}
-
-
 start();
