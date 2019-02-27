@@ -51,17 +51,16 @@ Structure.prototype = (function() {
 
     const setLimits = function() {   
         for (let row = 0; row <= this.numberRows; row++) { 
-            this.limits.top(this, row);
-            this.limits.bottom(this, row);
-            this.limits.right(this, row);
-            this.limits.left(this, row);
+            limits.top(this, row);
+            limits.bottom(this, row);
+            limits.right(this, row);
+            limits.left(this, row);
         }
     };
 
 	return {
         createDataStructure:createDataStructure,
-        setLimits:setLimits,
-        limits:limits
+        setLimits:setLimits
 	};
  
 }());
