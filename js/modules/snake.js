@@ -4,27 +4,19 @@ const Snake = function (currentPixelIndex, sizeInPixels) {
     this.sizeInPixels = sizeInPixels;
     this.path = [34,35,36];
     this.currentDirection = 'right';
+    this.extend(Snake,Structure);
     this.setPosition();
+
 };
 
 Snake.prototype = (function() {
-    'use strict';
-    const structure = new Structure(10,10);
-    const setPosition = function() {
-        const fistPixel = this.path.shift()
-        this.path.push(this.currentPixelIndex)
-        for (let pixel of this.path) {
-            structure.structureArray[pixel].value = 1;
-        }
-        structure.structureArray[fistPixel].value = 0;
-    };
-    
+   'use strict';
    const move = function(newPositionIndex)  {  
         if (pixelsArray[newPositionIndex].value || pixelsArray[newPositionIndex].islimit ) {
             return;
         }  
         this.currentPixelIndex = newPositionIndex;
-        this.setDataPosition();
+        this.setPosition();
         renderGame();
     }
 
@@ -53,10 +45,18 @@ Snake.prototype = (function() {
     }
 
     return {
-        setPosition:setPosition,
         toLeft: toLeft,
         toRight: toRight,
         toUp: toUp,
         toDown: toDown
     }
 }());
+
+Snake.prototype.extend = function(obj1, obj2) {
+    return (function(object) {
+        for (var property in object.prototype) {
+            this.prototype[property] = object.prototype[property];
+        }
+        return this;
+    }).apply(obj1, [obj2]);
+};
