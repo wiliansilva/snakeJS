@@ -1,11 +1,9 @@
 
-const Snake = function (currentPixelIndex, sizeInPixels) {
-    this.currentPixelIndex = currentPixelIndex
-    this.sizeInPixels = sizeInPixels;
+const Snake = function (structure) {
+    this.currentPixelIndex = 37
     this.path = [34,35,36];
     this.currentDirection = 'right';
-    this.extend(Snake,Structure);
-    this.setPosition();
+    structure.setPosition(this.currentPixelIndex, this.path);
 
 };
 
@@ -16,8 +14,8 @@ Snake.prototype = (function() {
             return;
         }  
         this.currentPixelIndex = newPositionIndex;
-        this.setPosition();
-        renderGame();
+        structure.setPosition(this.currentPixelIndex, this.path);
+        // renderGame();
     }
 
     const toLeft = function() { 

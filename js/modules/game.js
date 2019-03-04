@@ -1,7 +1,7 @@
 
 const Game = function () {
     this.structure = new Structure(10, 10);
-    this.snake = new Snake(37,3);
+    this.snake = new Snake(this.structure);
 
     this.render()
 };

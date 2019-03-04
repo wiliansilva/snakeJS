@@ -18,9 +18,6 @@ Structure.prototype = (function() {
             }
         }
     };
-    const getStructureArray = function() {
-        return this.structureArray;
-    };
     const limits = {
         bottom: function(thisObj, row) {
             const overflowPixelIndex = thisObj.numberRows * thisObj.numberColumns;
@@ -60,21 +57,19 @@ Structure.prototype = (function() {
         }
     };
 
-    const setPosition = function() {
-        console.log(this.getStructureArray())
-        // const fistCell = this.path.shift()
-        // this.structureArray[fistCell].value = 0;
-        // this.path.push(this.currentPixelIndex)
-        // for (let cell of this.path) {
-        //     this.structureArray[cell].value = 1;
-        // }
+    const setPosition = function(currentPixelIndex,path) {
+        const fistCell = path.shift()
+        this.structureArray[fistCell].value = 0;
+        path.push(currentPixelIndex)
+        for (let cell of path) {
+            this.structureArray[cell].value = 1;
+        }
     };
 
 	return {
         createDataStructure:createDataStructure,
         setLimits:setLimits,
-        setPosition:setPosition,
-        getStructureArray:getStructureArray
+        setPosition:setPosition
 	};
  
 }());
