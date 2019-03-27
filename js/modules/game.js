@@ -1,19 +1,20 @@
 
 const Game = function () {
     this.structure = new Structure(10, 10);
-    this.snake = new Snake(this.structure);
-    this.render()
+    this.snake = new Snake();
     
+    this.structure.setPosition(this.snake.currentPixelIndex, this.snake.path);
+    this.render()
     this.extend(Game,Controls);
     Controls.call(this);
 };
 
 Game.prototype = (function() {
     'use strict';
-   
-
-    const render = function() {        
-        const $table = document.querySelector('.fireCanvas');
+    const render = function() {  
+        
+    let $table = document.querySelector('.fireCanvas');  
+        $table.innerHTML = "";    
         const htmlTable =  document.createElement('table');
         for (let row = 0; row < this.structure.numberColumns; row++) {
             const htmlTr =  document.createElement('tr');
@@ -32,17 +33,14 @@ Game.prototype = (function() {
                 }
                 htmlTr.appendChild(htmlTd);     
             }
-            htmlTable.appendChild(htmlTr);  
-            
-            this.bodyGame = htmlTable
+            htmlTable.appendChild(htmlTr);
         }
-
         $table.appendChild(htmlTable);
-    }
+    };
 
     return {
         render:render
-    }
+    };
 }());
 
 Game.prototype.extend = function(obj1, obj2) {

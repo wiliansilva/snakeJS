@@ -1,45 +1,35 @@
 
-const Snake = function (structure) {
+const Snake = function () {
     this.currentPixelIndex = 37
     this.path = [34,35,36];
     this.currentDirection = 'right';
-    structure.setPosition(this.currentPixelIndex, this.path);
-
 };
 
 Snake.prototype = (function() {
    'use strict';
-   const move = function(newPositionIndex)  {  
-        if (pixelsArray[newPositionIndex].value || pixelsArray[newPositionIndex].islimit ) {
-            return;
-        }  
-        this.currentPixelIndex = newPositionIndex;
-        structure.setPosition(this.currentPixelIndex, this.path);
-        // renderGame();
-    }
-
+       
     const toLeft = function() { 
-        this.direction = 'left';
-        const newPositionIndex = snake.currentPixelIndex - 1;
-        move(newPositionIndex);
+        this.currentDirection = 'left';
+        const newPositionIndex = this.currentPixelIndex - 1;
+        this.currentPixelIndex = newPositionIndex;
     }
 
     const toRight = function() {
-        this.direction = 'right';
-        const newPositionIndex = snake.currentPixelIndex + 1;
-        move(newPositionIndex);
+        this.currentDirection = 'right';
+        const newPositionIndex = this.currentPixelIndex + 1;
+        this.currentPixelIndex = newPositionIndex;
     }
 
-    const toDown = function() {
-        this.direction = 'down';
-        const newPositionIndex = snake.currentPixelIndex + fireWidth;
-        move(newPositionIndex);
+    const toDown = function(numberRows) {
+        this.currentDirection = 'down';
+        const newPositionIndex = this.currentPixelIndex + numberRows;
+        this.currentPixelIndex = newPositionIndex;
     }
 
-    const toUp = function() {
-        this.direction = 'up';
-        const newPositionIndex = snake.currentPixelIndex - fireWidth; 
-        move(newPositionIndex);
+    const toUp = function(numberRows) {
+        this.currentDirection = 'up';
+        const newPositionIndex = this.currentPixelIndex - numberRows;
+        this.currentPixelIndex = newPositionIndex;
     }
 
     return {

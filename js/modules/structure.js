@@ -58,6 +58,7 @@ Structure.prototype = (function() {
     };
 
     const setPosition = function(currentPixelIndex,path) {
+
         const fistCell = path.shift()
         this.structureArray[fistCell].value = 0;
         path.push(currentPixelIndex)
@@ -65,7 +66,6 @@ Structure.prototype = (function() {
             this.structureArray[cell].value = 1;
         }
     };
-
 	return {
         createDataStructure:createDataStructure,
         setLimits:setLimits,
